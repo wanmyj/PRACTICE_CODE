@@ -2,7 +2,7 @@
 // 什么是链表的翻转:给定链表 head–>4—>3–>2–>1，将其翻转成 head–>1–>2–>3–>4 ，由于翻转链表是如此常见，如此重要
 // 所以我们分别详细讲解下如何用递归和非递归这两种方式来解题
 
-// non递归翻转
+// 递归翻转
 #include <iostream>
 #include <array>
 #include <algorithm>
@@ -88,24 +88,47 @@ public:
         }
         printf("FINAL NEXT: %p\n", tmp);
     }
+    NODE* ReverseLinkedListRecur(NODE *node)
+    {
+        NODE* tmp = nullptr;
+        if (node->next != nullptr) {
+            tmp = ReverseLinkedListRecur(node->next);
+            node->next->next = node;
+            node->next = nullptr;
+            return tmp;
+        } else {
+            return node;
+        }
+    }
+    void iterationInvertLinkedList() 
+    {
+        NODE* pre = head->next;
+        NODE* cur = pre->next;
+        pre->next = nullptr;
+        while (cur->next != nullptr) {
+            NODE* nextN = cur->next;
+            cur->next = pre;
+            pre = cur;
+            cur = nextN;
+        }
+        cur->next = pre;
+        head->next = cur;
+    }
 };
 int main()
 {
     LINKED_LIST oneLink;
-    printf("the oneLink is %p\n", &oneLink);
     // LINKED_LIST* oneLink1 = new LINKED_LIST();
     // printf("the oneLink1 is %p\n", &oneLink1);
     oneLink.AddNode(1);
     oneLink.AddNode(2);
     oneLink.AddNode(3);
-    oneLink.HeadInsert(4);
-    oneLink.PrintNodePos();
-    NODE* tmp = oneLink.ReturnNode(1);
-    NODE* tm2 = tmp->next;
-    oneLink.DelNode(tmp);
-    // free(tm2);
-    // printf("the tm2 data is %d %p\n", tm2->data, tm2);
-    oneLink.PrintNodePos();
+    oneLink.HeadInsert(0);
+    oneLink.PrintLink();
+    oneLink.iterationInvertLinkedList();
+    // h 0 1 2 3
+    // h 0 3 2 1
+    oneLink.PrintLink();
 
     return 0;
 }
